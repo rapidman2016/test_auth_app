@@ -28,4 +28,12 @@ public class ApiToken {
         return customerId;
     }
 
+    @Override
+    public String toString() {
+        return "ApiToken{" +
+                "token='" + token + '\'' +
+                ", expirationDate=" + expirationDate +
+                ", customerId='" + customerId + '\'' +
+                '}';
+    }
 }

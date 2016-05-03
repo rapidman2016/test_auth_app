@@ -1,4 +1,4 @@
-<%@ page import="com.test.websocket.auth.client.WebSocketClient" %>
+<%@ page import="com.test.websocket.auth.core.WebSocketClient" %>
 <%@ page import="org.springframework.web.context.support.WebApplicationContextUtils" %>
 <%@ page import="javax.websocket.MessageHandler" %>
 <%@ page import="com.test.websocket.auth.api.MessageUtils" %>

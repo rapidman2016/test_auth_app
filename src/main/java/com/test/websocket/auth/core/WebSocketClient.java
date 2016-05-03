@@ -1,5 +1,6 @@
-package com.test.websocket.auth.client;
+package com.test.websocket.auth.core;
 
+import com.test.websocket.auth.client.AppClientEndpoint;
 import org.glassfish.tyrus.client.ClientManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +13,6 @@ import javax.websocket.MessageHandler;
 import javax.websocket.Session;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by timur on 03.05.16.
@@ -22,7 +20,6 @@ import java.util.Map;
 @Component
 public class WebSocketClient {
     private static final Logger log = LoggerFactory.getLogger(WebSocketClient.class);
-    public static final String ORIGIN_HEADER_TMPL = "http://%s";
     public static final String SERVER_ENDPOINT_URL_TMPL = "ws://%s:%s/%s/app";
     @Value("${app.host}")
     private String host;
@@ -55,12 +52,6 @@ public class WebSocketClient {
 
     public void connect(){
         final ClientEndpointConfig.Builder configBuilder = ClientEndpointConfig.Builder.create();
-//        configBuilder.configurator(new ClientEndpointConfig.Configurator() {
-//            @Override
-//            public void beforeRequest(final Map<String, List<String>> headers) {
-//                headers.put("Origin", Arrays.asList(String.format(ORIGIN_HEADER_TMPL, host)));
-//            }
-//        });
         ClientEndpointConfig clientConfig = configBuilder.build();
         ClientManager client = ClientManager.createClient();
         try {

@@ -7,6 +7,7 @@ public final class ProtocolConstants {
     public static final String CHARSET_NAME = "UTF-8";
     public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
     public static final String API_TOKEN_PARAM = "api_token";
-    public static final String LOGIN_PARAM = "email";
+    public static final String API_TOKEN_EXPIRATION_DATE_PARAM = "api_token_expiration_date";
+    public static final String EMAIL_PARAM = "email";
     public static final String PASSWORD_PARAM = "password";
 }

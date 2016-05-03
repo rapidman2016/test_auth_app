@@ -1,4 +1,4 @@
-package com.test.websocket.auth.server;
+package com.test.websocket.auth.core;
 
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
