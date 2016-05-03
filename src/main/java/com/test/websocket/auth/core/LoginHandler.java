@@ -3,7 +3,7 @@ package com.test.websocket.auth.core;
 import com.test.websocket.auth.api.ApiToken;
 import com.test.websocket.auth.api.MessageUtils;
 import com.test.websocket.auth.api.ProtocolMessage;
-import com.test.websocket.auth.api.exception.AppException;
+import com.test.websocket.auth.api.exception.AbstractAppException;
 import com.test.websocket.auth.api.util.JsonSerialyzer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ import static com.test.websocket.auth.api.MessageUtils.*;
 public class LoginHandler extends AbstractClientRequestHandler {
     private static final Logger log = LoggerFactory.getLogger(LoginHandler.class);
     @Override
-    public void handle(RequestContext requestContext) throws AppException{
+    public void handle(RequestContext requestContext) throws AbstractAppException {
         ProtocolMessage request = requestContext.getProtocolMessage();
         ApiToken apiToken = requestContext.getAuthService().login(getEmail(request), getPassword(request));
         ProtocolMessage response = MessageUtils.createLoginResponse(apiToken, request);

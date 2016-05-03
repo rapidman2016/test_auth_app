@@ -1,39 +1,54 @@
 package com.test.websocket.auth.api;
 
+import com.test.websocket.auth.api.model.AbstractMongoEntity;
+import org.springframework.data.mongodb.core.query.Update;
+
 import java.util.Date;
 
 /**
  * Created by timur on 02.05.16.
  */
-public class ApiToken {
-    private String token;
+@org.springframework.data.mongodb.core.mapping.Document(collection = "api_token")
+public class ApiToken extends AbstractMongoEntity{
     private Date expirationDate;
-    private String customerId;
+    private String email;
 
-    public ApiToken(String token, Date expirationDate, String customerId) {
-        this.token = token;
-        this.expirationDate = expirationDate;
-        this.customerId = customerId;
+    public ApiToken() {
     }
 
-    public String getToken() {
-        return token;
+    public ApiToken(Date expirationDate, String email) {
+        this.expirationDate = expirationDate;
+        this.email = email;
     }
 
     public Date getExpirationDate() {
         return expirationDate;
     }
 
-    public String getCustomerId() {
-        return customerId;
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Override
+    protected void exposeFieldsToSave(Update update) {
+        update.set("expirationDate", expirationDate);
+        update.set("customerId", email);
     }
 
     @Override
     public String toString() {
-        return "ApiToken{" +
-                "token='" + token + '\'' +
-                ", expirationDate=" + expirationDate +
-                ", customerId='" + customerId + '\'' +
+        return "{" +
+                "expirationDate=" + expirationDate +
+                ", email='" + email + '\'' +
                 '}';
     }
+
 }

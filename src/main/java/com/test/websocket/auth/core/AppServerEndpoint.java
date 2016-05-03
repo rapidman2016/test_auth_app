@@ -2,7 +2,9 @@ package com.test.websocket.auth.core;
 
 import com.test.websocket.auth.api.IAuthService;
 import com.test.websocket.auth.api.MessageType;
+import com.test.websocket.auth.api.MessageUtils;
 import com.test.websocket.auth.api.ProtocolMessage;
+import com.test.websocket.auth.api.exception.*;
 import com.test.websocket.auth.api.util.JsonSerialyzer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,11 +48,20 @@ public class AppServerEndpoint extends TextWebSocketHandler {
         log.info("in:{}", json);
         ProtocolMessage req = JsonSerialyzer.readJsonValue(json, ProtocolMessage.class);
         AbstractClientRequestHandler handler = handlers.get(req.getType());
-        if(handler == null){
-            String err = "Can't find handler for request " + req;
-            log.error(err);
-            throw new RuntimeException(err);
+        try {
+            if(handler == null){
+                String err = "Can't find handler for request " + req;
+                log.error(err);
+                throw new IllegalStateException("Unrecognized message type " + req.getType());
+            }
+            handler.handle(new RequestContext(authService, session, message, req));
+        } catch (AbstractAppException e) {
+            log.error("Error while handling request", e);
+            ProtocolMessage errResp = MessageUtils.createAuthErrorResponse(req, e);
+            session.sendMessage(new TextMessage(JsonSerialyzer.toJson(errResp)));
+        }catch (Throwable t){
+            ProtocolMessage errResp = MessageUtils.createFatalErrorResponse(req);
+            session.sendMessage(new TextMessage(JsonSerialyzer.toJson(errResp)));
         }
-        handler.handle(new RequestContext(authService, session, message, req));
     }
 }
