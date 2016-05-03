@@ -1,10 +1,11 @@
-package com.test.websocket.auth.core;
+package com.test.websocket.auth.core.handler;
 
 import com.test.websocket.auth.api.ApiToken;
 import com.test.websocket.auth.api.MessageUtils;
 import com.test.websocket.auth.api.ProtocolMessage;
 import com.test.websocket.auth.api.exception.AbstractAppException;
 import com.test.websocket.auth.api.util.JsonSerialyzer;
+import com.test.websocket.auth.core.RequestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.socket.TextMessage;

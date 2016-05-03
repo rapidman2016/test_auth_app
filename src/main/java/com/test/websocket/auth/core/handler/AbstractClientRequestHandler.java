@@ -1,6 +1,7 @@
-package com.test.websocket.auth.core;
+package com.test.websocket.auth.core.handler;
 
 import com.test.websocket.auth.api.exception.AbstractAppException;
+import com.test.websocket.auth.core.RequestContext;
 
 /**
  * Created by timur on 03.05.16.

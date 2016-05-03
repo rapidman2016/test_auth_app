@@ -6,6 +6,8 @@ import com.test.websocket.auth.api.MessageUtils;
 import com.test.websocket.auth.api.ProtocolMessage;
 import com.test.websocket.auth.api.exception.*;
 import com.test.websocket.auth.api.util.JsonSerialyzer;
+import com.test.websocket.auth.core.handler.AbstractClientRequestHandler;
+import com.test.websocket.auth.core.handler.LoginHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
