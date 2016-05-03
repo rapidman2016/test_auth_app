@@ -48,9 +48,10 @@ public class AppServerEndpoint extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String json = message.getPayload();
         log.info("in:{}", json);
-        ProtocolMessage req = JsonSerialyzer.readJsonValue(json, ProtocolMessage.class);
-        AbstractClientRequestHandler handler = handlers.get(req.getType());
+        ProtocolMessage req = null;
         try {
+            req = JsonSerialyzer.readJsonValue(json, ProtocolMessage.class);
+            AbstractClientRequestHandler handler = handlers.get(req.getType());
             if(handler == null){
                 String err = "Can't find handler for request " + req;
                 log.error(err);

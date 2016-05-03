@@ -15,7 +15,7 @@ import java.util.UUID;
 public class MessageUtils {
 
     public static ProtocolMessage createFatalErrorResponse(ProtocolMessage req) {
-        ProtocolMessage resp = createProtocolMessage(MessageType.CUSTOMER_ERROR, req.getSequenceId());
+        ProtocolMessage resp = createProtocolMessage(MessageType.CUSTOMER_ERROR, req == null ? null : req.getSequenceId());
         Map<String,String> data = new HashMap<>();
         data.put(ProtocolConstants.ERROR_DESC_PARAM, "Server error");
         data.put(ProtocolConstants.ERROR_CODE_PARAM, ProtocolConstants.FATAL_ERROR);
@@ -24,7 +24,7 @@ public class MessageUtils {
     }
 
     public static ProtocolMessage createAuthErrorResponse(ProtocolMessage req, AbstractAppException e) {
-        ProtocolMessage resp = createProtocolMessage(MessageType.CUSTOMER_ERROR, req.getSequenceId());
+        ProtocolMessage resp = createProtocolMessage(MessageType.CUSTOMER_ERROR, req == null ? null : req.getSequenceId());
         Map<String,String> data = new HashMap<>();
         data.put(ProtocolConstants.ERROR_DESC_PARAM, e.getMessage());
         data.put(ProtocolConstants.ERROR_CODE_PARAM, e.getErrorCode());
