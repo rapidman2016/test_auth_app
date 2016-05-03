@@ -1,18 +1,16 @@
-<%@ page import="com.test.websocket.auth.core.WebSocketClient" %>
-<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils" %>
-<%@ page import="javax.websocket.MessageHandler" %>
+<%@ page import="com.test.websocket.auth.api.ApiToken" %>
 <%@ page import="com.test.websocket.auth.api.MessageUtils" %>
-<%@ page import="java.util.concurrent.TimeUnit" %>
+<%@ page import="com.test.websocket.auth.api.dao.IApiTokenDao" %>
 <%@ page import="com.test.websocket.auth.api.dao.ICustomerDao" %>
 <%@ page import="com.test.websocket.auth.api.model.Customer" %>
-<%@ page import="com.test.websocket.auth.api.dao.IApiTokenDao" %>
-<%@ page import="com.test.websocket.auth.api.ApiToken" %>
+<%@ page import="com.test.websocket.auth.core.StatisticsCollector" %>
+<%@ page import="com.test.websocket.auth.core.WebSocketClient" %>
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
-<%@ page import="com.test.websocket.auth.core.StatisticsCollector" %>
-<%@ page import="java.util.ArrayList" %>
 <%@ page import="org.springframework.data.domain.Sort" %>
-<%@ page import="java.util.Collections" %>
+<%@ page import="org.springframework.web.context.support.WebApplicationContextUtils" %>
+<%@ page import="javax.websocket.MessageHandler" %>
+<%@ page import="java.util.concurrent.TimeUnit" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
 <html>
@@ -22,7 +20,6 @@
 
 <%
     final Logger log = LoggerFactory.getLogger("jsp");
-    final StringBuilder serverResponse = new StringBuilder();
     ICustomerDao customerDao = WebApplicationContextUtils.getRequiredWebApplicationContext(application).getBean(ICustomerDao.class);
     IApiTokenDao apiTokenDao = WebApplicationContextUtils.getRequiredWebApplicationContext(application).getBean(IApiTokenDao.class);
 
