@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.lang.reflect.ParameterizedType;
@@ -132,7 +133,7 @@ public abstract class AbstractMongoDao<T extends AbstractMongoEntity> implements
 
     public List<T> findListByProperties(int page, int size, String sortProperty, String sortDirection, List<Criteria> criteriaList) {
         Sort sort = null;
-        if (StringUtils.isEmpty(sortProperty)) {
+        if (!StringUtils.isEmpty(sortProperty)) {
             if (sortProperty.equals("id")) // sort by id doesn't work without that
                 sortProperty = "_id";
             Sort.Direction direction =
@@ -152,8 +153,10 @@ public abstract class AbstractMongoDao<T extends AbstractMongoEntity> implements
 
     protected Query getQuery(int page, int size, Sort sort, List<Criteria> criteriaList) {
         Query query = new Query();
-        for (Criteria criterion : criteriaList) {
-            query.addCriteria(criterion);
+        if(!CollectionUtils.isEmpty(criteriaList)){
+            for (Criteria criterion : criteriaList) {
+                query.addCriteria(criterion);
+            }
         }
         Pageable pageable;
         if (sort != null) {

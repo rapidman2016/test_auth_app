@@ -3,15 +3,14 @@ package com.test.websocket.auth.core.bootstrap;
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
 import com.mongodb.ServerAddress;
+import de.flapdoodle.embed.mongo.Command;
 import de.flapdoodle.embed.mongo.MongodExecutable;
-import de.flapdoodle.embed.mongo.MongodProcess;
 import de.flapdoodle.embed.mongo.MongodStarter;
-import de.flapdoodle.embed.mongo.config.MongodConfig;
-import de.flapdoodle.embed.mongo.config.RuntimeConfig;
+import de.flapdoodle.embed.mongo.config.*;
 import de.flapdoodle.embed.mongo.distribution.Version;
-import de.flapdoodle.embed.process.config.io.ProcessOutput;
+import de.flapdoodle.embed.process.config.IRuntimeConfig;
 import de.flapdoodle.embed.process.extract.UserTempNaming;
-import de.flapdoodle.embed.process.io.NullProcessor;
+import de.flapdoodle.embed.process.runtime.Network;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -31,26 +30,36 @@ import java.io.IOException;
 @EnableMongoRepositories
 public class MongoConfig extends AbstractMongoConfiguration {
     private static final Logger log = LoggerFactory.getLogger(MongoConfig.class);
-    protected static MongodProcess mongoProcess;
-    protected static Mongo mongo;
     public static final String MONGO_HOST = "localhost";
     public static final int MONGO_PORT = 27028;
     public static final String MONGO_DB_NAME = "test_auth_db";
+    private MongodExecutable mongodExecutable;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         try {
-            RuntimeConfig config = new RuntimeConfig();
-            config.setExecutableNaming(new UserTempNaming());
-            //suppress mongo logging
-            config.setProcessOutput(new ProcessOutput(new NullProcessor(), new NullProcessor(), new NullProcessor()));
+            Command command = Command.MongoD;
 
-            MongodStarter starter = MongodStarter.getInstance(config);
+            IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
+                    .defaults(command)
+                    .artifactStore(new ExtractedArtifactStoreBuilder()
+                            .defaults(command)
+                            .download(new DownloadConfigBuilder()
+                                    .defaultsForCommand(command).build())
+                            .executableNaming(new UserTempNaming()))
+                    .build();
 
-            MongodExecutable mongoExecutable = starter.prepare(new MongodConfig(Version.V2_2_0, MONGO_PORT, false));
-            mongoProcess = mongoExecutable.start();
+            IMongodConfig mongodConfig = new MongodConfigBuilder()
+                    .version(Version.Main.PRODUCTION)
+                    .net(new Net(MONGO_PORT, Network.localhostIsIPv6()))
+                    .build();
 
-            mongo = new MongoClient(MONGO_HOST, MONGO_PORT);
+            MongodStarter runtime = MongodStarter.getInstance(runtimeConfig);
+
+            mongodExecutable = runtime.prepare(mongodConfig);
+            mongodExecutable.start();
+
+            MongoClient mongo = new MongoClient(MONGO_HOST, MONGO_PORT);
             mongo.getDB(MONGO_DB_NAME);
         } catch (IOException e) {
             String err = "Can't init mongodb";
@@ -60,10 +69,10 @@ public class MongoConfig extends AbstractMongoConfiguration {
     }
 
     @PreDestroy
-    public void destroy(){
+    public void destroy() {
         try {
-            mongo.close();
-            mongoProcess.stop();
+            if (mongodExecutable != null)
+                mongodExecutable.stop();
         } catch (Exception e) {
             log.error("Error while closing mongodb", e);
         }

@@ -10,6 +10,9 @@
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@ page import="com.test.websocket.auth.core.StatisticsCollector" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="org.springframework.data.domain.Sort" %>
+<%@ page import="java.util.Collections" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page session="false" %>
 <html>
@@ -73,7 +76,7 @@ Server response:<%=StatisticsCollector.getInstance().getLastServerResponse()%>
         <th>Customer</th>
     </tr>
     <%
-        for (Customer customer : customerDao.findAll()) {
+        for (Customer customer : customerDao.findListByProperties(0, 1000, "createDate", Sort.Direction.DESC.name(), null)) {
     %>
     <tr>
         <td><%=customer%>
@@ -90,7 +93,7 @@ Server response:<%=StatisticsCollector.getInstance().getLastServerResponse()%>
         <th>Token</th>
     </tr>
     <%
-        for (ApiToken token : apiTokenDao.findAll()) {
+        for (ApiToken token : apiTokenDao.findListByProperties(0, 1000, "createDate", Sort.Direction.DESC.name(), null)) {
     %>
     <tr>
         <td><%=token%>
