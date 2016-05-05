@@ -13,5 +13,5 @@ mvn clean package
 - WildFly 10
 - Tomcat 8
 
-##This is server endpoint URL:
+##This is a server endpoint URL:
 ws://localhost:8080/test_auth/app
